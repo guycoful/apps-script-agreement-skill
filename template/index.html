@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}} · {{SENDER_NAME}}</title>
+<style>
+:root{
+  --bg:#f4f2ee; --card:#ffffff; --ink:#1e2430; --ink-soft:#4a5261;
+  --line:#dcd8d0; --acc:#1f5fbf; --acc-dark:#17488f; --ok:#1a7f4b; --err:#b3261e;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{font-size:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Segoe UI",Arial,"Noto Sans Hebrew",sans-serif;
+  font-size:1.0625rem;line-height:1.75;-webkit-text-size-adjust:100%}
+.wrap{max-width:52rem;margin:0 auto;padding:1.5rem 1.125rem 4rem}
+.skip{position:absolute;right:-9999px;top:0;background:var(--acc);color:#fff;padding:.6rem 1rem;border-radius:0 0 0 8px;z-index:10}
+.skip:focus{right:0}
+header.top{text-align:center;padding:1.75rem 0 1.25rem;border-bottom:2px solid var(--line);margin-bottom:1.5rem}
+h1{margin:0 0 .35rem;font-size:1.75rem;line-height:1.3;font-weight:700}
+header.top p{margin:0;color:var(--ink-soft);font-size:1rem}
+.doc{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.5rem 1.375rem;max-height:60vh;overflow-y:auto;font-size:1rem}
+.doc:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.doc h2{font-size:1.1875rem;line-height:1.4;margin:1.5rem 0 .4rem;padding-bottom:.3rem;
+  border-bottom:1px solid var(--line);font-weight:700}
+.doc h2:first-child{margin-top:0}
+.doc h3{font-size:1.0625rem;margin:1rem 0 .25rem;color:var(--acc-dark);font-weight:700}
+.doc p{margin:.35rem 0}
+.doc ul{padding-inline-start:0;padding-inline-end:1.25rem;margin:.35rem 0}
+.doc strong{font-weight:700}
+.doc hr{display:none}
+.hint{color:var(--ink-soft);font-size:.9375rem;text-align:center;margin:.9rem 0 1.5rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem 1.375rem;margin-top:1.25rem}
+fieldset{border:0;margin:0;padding:0}
+legend,h2.sec{font-size:1.25rem;font-weight:700;margin:0 0 .9rem;padding:0}
+label{display:block;font-size:.9375rem;color:var(--ink-soft);margin:.9rem 0 .35rem;font-weight:600}
+input[type=text],input[type=email],input[type=tel]{
+  width:100%;padding:.75rem .8rem;border-radius:10px;border:1.5px solid #bdb8ae;
+  background:#fff;color:var(--ink);font-size:1.0625rem;font-family:inherit}
+input:focus-visible,button:focus-visible,canvas:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.row{display:flex;gap:.9rem;flex-wrap:wrap}
+.row>div{flex:1 1 15rem}
+#pad{width:100%;height:11rem;background:#fff;border-radius:10px;border:1.5px dashed #a9a49a;
+  touch-action:none;display:block;cursor:crosshair}
+.padbar{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-top:.6rem;flex-wrap:wrap}
+.padbar span{color:var(--ink-soft);font-size:.9375rem}
+.clear{background:#fff;border:1.5px solid #bdb8ae;color:var(--ink);border-radius:9px;
+  padding:.5rem .95rem;font-size:.9375rem;cursor:pointer;font-family:inherit;min-height:2.75rem}
+.agree{display:flex;gap:.7rem;align-items:flex-start;margin:1.25rem 0 .3rem;
+  font-size:1rem;color:var(--ink);font-weight:400}
+.agree input{margin-top:.35rem;width:1.375rem;height:1.375rem;accent-color:var(--acc);flex:none}
+button.send{width:100%;margin-top:1.1rem;padding:1rem;border:none;border-radius:11px;
+  background:var(--acc);color:#fff;font-size:1.125rem;font-weight:700;cursor:pointer;
+  font-family:inherit;min-height:3.25rem}
+button.send:hover:not(:disabled){background:var(--acc-dark)}
+button.send:disabled{background:#9aa1ad;cursor:not-allowed}
+
+.progress{display:none;margin-top:1.1rem}
+.progress .bar{height:.6rem;background:#e3dfd7;border-radius:999px;overflow:hidden}
+.progress .fill{height:100%;width:0;background:var(--acc);border-radius:999px;
+  transition:width .45s ease}
+.progress .step{margin-top:.6rem;text-align:center;font-size:1rem;color:var(--ink-soft)}
+.progress .pct{font-variant-numeric:tabular-nums;font-weight:700;color:var(--acc-dark)}
+@media (prefers-reduced-motion:reduce){.progress .fill{transition:none}}
+.msg{margin-top:.8rem;font-size:1rem;text-align:center;min-height:1.5rem}
+.msg.err{color:var(--err);font-weight:600}
+.done{display:none;text-align:center;padding:3rem 1.25rem}
+.done h2{color:var(--ok);font-size:1.5rem;margin-bottom:.5rem}
+.foot{margin-top:1.5rem;text-align:center;color:var(--ink-soft);font-size:.875rem}
+@media (max-width:26rem){ h1{font-size:1.5rem} .wrap{padding:1rem .875rem 3rem} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head><body>
+<a class="skip" href="#sign">דלג לטופס החתימה</a>
+<div class="wrap" id="app">
+<header class="top">
+  <h1>{{TITLE}}</h1>
+  <p>{{OWNER_NAME}}</p>
+</header>
+
+<div class="doc" id="doc" tabindex="0" role="region" aria-label="נוסח ההסכם המלא, ניתן לגלילה">
+{{BODY}}
+
+</div>
+<p class="hint" id="scrollhint">גלול לסוף ההסכם, מלא את הפרטים וחתום למטה.</p>
+
+<div class="card" id="sign">
+ <form id="form" novalidate>
+  <fieldset>
+    <legend>פרטי החותם/ת</legend>
+    <div class="row">
+      <div><label for="name">שם מלא</label>
+        <input type="text" id="name" name="name" autocomplete="name" required></div>
+      <div><label for="idnum">ת.ז. או ח.פ.</label>
+        <input type="text" id="idnum" name="idnum" inputmode="numeric" required></div>
+    </div>
+    <div class="row">
+      <div><label for="phone">טלפון</label>
+        <input type="tel" id="phone" name="phone" autocomplete="tel" required></div>
+      <div><label for="email">דוא״ל</label>
+        <input type="email" id="email" name="email" autocomplete="email" required></div>
+    </div>
+    <div class="row">
+      <div><label for="address">כתובת</label>
+        <input type="text" id="address" name="address" autocomplete="street-address"></div>
+    </div>
+  </fieldset>
+
+  <label for="pad" id="padlabel">חתימה</label>
+  <canvas id="pad" tabindex="0" role="img"
+          aria-labelledby="padlabel" aria-describedby="padhelp"></canvas>
+  <div class="padbar">
+    <span id="padhelp">חתום עם האצבע או עם העכבר בתוך המסגרת</span>
+    <button class="clear" type="button" id="clr">נקה חתימה</button>
+  </div>
+
+  <label class="agree" for="agree"><input type="checkbox" id="agree" name="agree">
+    <span>קראתי את ההסכם במלואו, אני מסכים/ה לתנאיו, ומאשר/ת שחתימה דיגיטלית זו מחייבת אותי כדין חתימה מקורית.</span></label>
+
+  <button class="send" id="send" type="submit" disabled>חתום ושלח</button>
+  <div class="progress" id="prog">
+    <div class="bar"><div class="fill" id="fill"></div></div>
+    <p class="step" id="step" role="status" aria-live="polite">
+      <span class="pct" id="pct">0%</span> · מתחיל</p>
+    <div role="progressbar" id="pbar" aria-labelledby="step"
+         aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+  </div>
+  <div class="msg" id="msg" role="status" aria-live="polite"></div>
+ </form>
+</div>
+<p class="foot">{{FOOTER}}</p>
+</div>
+
+<div class="done" id="done" role="status">
+  <h2>ההסכם נחתם</h2>
+  <p>עותק חתום נשלח אליך למייל. אפשר להתחיל.</p>
+</div>
+
+<script>
+var c=document.getElementById('pad'),ctx,drawn=false;
+function fit(){var r=c.getBoundingClientRect(),d=window.devicePixelRatio||1;
+  c.width=r.width*d;c.height=r.height*d;ctx=c.getContext('2d');ctx.scale(d,d);
+  ctx.lineWidth=2.4;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#111';}
+fit();window.addEventListener('resize',function(){fit();drawn=false;check();});
+var down=false;
+function pt(e){var r=c.getBoundingClientRect();var t=e.touches?e.touches[0]:e;
+  return{x:t.clientX-r.left,y:t.clientY-r.top};}
+function start(e){e.preventDefault();down=true;drawn=true;var p=pt(e);
+  ctx.beginPath();ctx.moveTo(p.x,p.y);check();}
+function move(e){if(!down)return;e.preventDefault();var p=pt(e);ctx.lineTo(p.x,p.y);ctx.stroke();}
+function end(){down=false;}
+c.addEventListener('mousedown',start);c.addEventListener('mousemove',move);
+window.addEventListener('mouseup',end);
+c.addEventListener('touchstart',start,{passive:false});
+c.addEventListener('touchmove',move,{passive:false});
+c.addEventListener('touchend',end);
+document.getElementById('clr').onclick=function(){fit();drawn=false;check();
+  document.getElementById('msg').textContent='החתימה נוקתה.';document.getElementById('msg').className='msg';};
+
+
+var STEPS=[[8,'שומר את החתימה'],[30,'מאמת את הפרטים'],[55,'מייצר את ההסכם החתום'],
+           [78,'שומר עותק בארכיון'],[92,'שולח אליך למייל']];
+var timer=null;
+function setProg(p,label){
+  document.getElementById('fill').style.width=p+'%';
+  document.getElementById('pct').textContent=Math.round(p)+'%';
+  document.getElementById('pbar').setAttribute('aria-valuenow',Math.round(p));
+  if(label)document.getElementById('step').innerHTML=
+    '<span class="pct" id="pct">'+Math.round(p)+'%</span> · '+label;
+}
+function startProg(){
+  document.getElementById('prog').style.display='block';
+  var i=0,t0=Date.now();
+  setProg(STEPS[0][0],STEPS[0][1]);
+  timer=setInterval(function(){
+    var el=(Date.now()-t0)/1000;
+    var target=Math.min(92,8+el*4.2);
+    while(i<STEPS.length-1&&target>=STEPS[i+1][0])i++;
+    setProg(target,STEPS[i][1]);
+  },400);
+}
+function stopProg(ok){
+  if(timer){clearInterval(timer);timer=null;}
+  if(ok){setProg(100,'הושלם');}
+  else{document.getElementById('prog').style.display='none';}
+}
+
+var ids=['name','idnum','phone','email'];
+function check(){
+  var ok=drawn&&document.getElementById('agree').checked;
+  ids.forEach(function(i){if(!document.getElementById(i).value.trim())ok=false;});
+  var em=document.getElementById('email').value;
+  if(em&&em.indexOf('@')<1)ok=false;
+  document.getElementById('send').disabled=!ok;
+  return ok;
+}
+ids.forEach(function(i){document.getElementById(i).addEventListener('input',check);});
+document.getElementById('agree').addEventListener('change',check);
+
+document.getElementById('form').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  if(!check())return;
+  var b=document.getElementById('send'),m=document.getElementById('msg');
+  b.disabled=true;m.className='msg';m.textContent='';startProg();
+  google.script.run
+    .withSuccessHandler(function(r){
+      if(r&&r.ok){stopProg(true);
+        setTimeout(function(){document.getElementById('app').style.display='none';
+          document.getElementById('done').style.display='block';window.scrollTo(0,0);},600);}
+      else{stopProg(false);m.textContent='שגיאה: '+((r&&r.error)||'נסה שוב');
+        m.className='msg err';b.disabled=false;}
+    })
+    .withFailureHandler(function(e){
+      stopProg(false);m.textContent='שגיאה בשליחה. נסה שוב או שלח לי הודעה.';
+      m.className='msg err';b.disabled=false;})
+    .submitSignature({
+      name:document.getElementById('name').value.trim(),
+      idnum:document.getElementById('idnum').value.trim(),
+      phone:document.getElementById('phone').value.trim(),
+      email:document.getElementById('email').value.trim(),
+      signature:c.toDataURL('image/png'),
+      address:(document.getElementById('address')||{}).value||'',
+      agreed:true,
+      ua:navigator.userAgent
+    });
+});
+</script></body></html>

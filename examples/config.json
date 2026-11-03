@@ -1,0 +1,17 @@
+{
+ "TITLE": "הסכם שירות: הקמת בוט וואטסאפ",
+ "SHEET_NAME": "חתימות הסכם שירות בוט",
+ "FOLDER_NAME": "הסכמי שירות בוט חתומים",
+ "OWNER_NAME": "ישראל ישראלי, 000000000",
+ "OWNER_EMAIL": "you@example.com",
+ "SENDER_NAME": "ישראל ישראלי",
+ "SIGN_OFF": "ישראל",
+ "PROP_PREFIX": "BOT1",
+ "SIG_CLAUSE": "8.3",
+ "LAWYER_FOCUS": "בעלות בתוצרים ולתנאי התשלום",
+ "SUBTITLE_EN": "SERVICE AGREEMENT",
+ "FILE_PREFIX": "הסכם-שירות-בוט",
+ "MAIL_SUBJECT": "ההסכם החתום: הקמת בוט וואטסאפ",
+ "MAIL_BODY": "ההסכם נחתם ומצורף כאן כ-PDF. עותק שמור גם אצלי.<br><br>מכאן מתחילים לעבוד.",
+ "FOOTER": "ישראל ישראלי · you@example.com"
+}
